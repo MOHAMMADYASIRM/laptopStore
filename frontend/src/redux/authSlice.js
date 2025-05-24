@@ -1,7 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const url = "http://localhost:4100";
+const url = process.env.REACT_APP_BACKEND_URL;
+
+
 
 export const registerUser = createAsyncThunk(
     "auth/signup",
@@ -28,6 +30,7 @@ export const registerUser = createAsyncThunk(
 
 export const loginUser = createAsyncThunk("auth/login", async (userData, { rejectWithValue }) => {
     try {
+        console.log(url);
         const response = await axios.post(`${url}/api/auth/login`, userData, {
             headers: { "Content-Type": "application/json" },
         });
