@@ -25,7 +25,7 @@ const adminLogin = async (req, res) => {
 
         // } else if (adminEmail === email && adminPassword === password) {
         //     console.log("succcess");
-            return res.status(200).json({ message: "Admin Login Success..." })
+        return res.status(200).json({ message: "Admin Login Success..." })
         // }
         // else {
         //     console.log("failed");
