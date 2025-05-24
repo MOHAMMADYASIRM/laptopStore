@@ -13,24 +13,24 @@ dotenv.config();
 const adminLogin = async (req, res) => {
     try {
 
-        const { adminEmail, adminPassword } = req.body;
-        console.log(adminEmail,adminPassword);
-        const dbpass = await admins.findOne({ adminPassword })
-        const email = process.env.adminEmail;
-        const password = dbpass || process.env.adminPassword;
+        // const { adminEmail, adminPassword } = req.body;
+        // console.log(adminEmail,adminPassword);
+        // const dbpass = await admins.findOne({ adminPassword })
+        // const email = process.env.adminEmail;
+        // const password = dbpass || process.env.adminPassword;
 
-        if (!email) {
+        // if (!email) {
 
-            return res.status(400).json({ message: "Admin not Exists..." })
+        //     return res.status(400).json({ message: "Admin not Exists..." })
 
-        } else if (adminEmail === email && adminPassword === password) {
-            console.log("succcess");
+        // } else if (adminEmail === email && adminPassword === password) {
+        //     console.log("succcess");
             return res.status(200).json({ message: "Admin Login Success..." })
-        }
-        else {
-            console.log("failed");
-            return res.status(401).json({ message: "Wrong password..." })
-        }
+        // }
+        // else {
+        //     console.log("failed");
+        //     return res.status(401).json({ message: "Wrong password..." })
+        // }
     } catch (error) {
         return res.status(500).json({ message: "Server Error.." })
     }
