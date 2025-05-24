@@ -14,6 +14,7 @@ const adminLogin = async (req, res) => {
     try {
 
         const { adminEmail, adminPassword } = req.body;
+        console.log(adminEmail,adminPassword);
         const dbpass = await admins.findOne({ adminPassword })
         const email = process.env.adminEmail;
         const password = dbpass || process.env.adminPassword;
