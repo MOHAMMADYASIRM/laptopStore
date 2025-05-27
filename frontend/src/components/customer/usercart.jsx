@@ -23,6 +23,7 @@ export default function UserCart() {
 
     const [popupMessage, setPopupMessage] = useState("");
     const [showPopup, setShowPopup] = useState(false);
+    const [reloadOnClose, setReloadOnClose] = useState(false);
 
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
@@ -110,8 +111,6 @@ export default function UserCart() {
             document.body.appendChild(script);
         });
 
-
-
     const handleCartBooking = async () => {
         if (!cartItems?.length) {
             setPopupMessage("Your cart is empty.");
@@ -119,10 +118,7 @@ export default function UserCart() {
             return;
         }
 
-
-
         try {
-
             const sdkLoaded = await loadRazorpayScript();
             if (!sdkLoaded) {
                 setPopupMessage("Failed to load Razorpay SDK. Please try again.");
@@ -130,15 +126,8 @@ export default function UserCart() {
                 return;
             }
 
-            const orderResponse = await dispatch(
-                createOrder(
-                    totalPrice
-                )
-            );
-
+            const orderResponse = await dispatch(createOrder(totalPrice));
             const order = orderResponse.payload;
-
-
 
             const options = {
                 key: RAZORPAY_KEY,
@@ -161,16 +150,16 @@ export default function UserCart() {
                             totalPrice,
                             paymentId: response.razorpay_payment_id,
                         })
-
                     ).then((res) => {
                         if (res.payload?.message === "Bookings created successfully") {
                             setPopupMessage("Products booked successfully.");
-                            dispatch(clearCart(userId));
-                            window.location.reload();
+                            flushCart();
+                            setReloadOnClose(true);
+                            setShowPopup(true);
                         } else {
                             setPopupMessage("Something went wrong after payment.");
+                            setShowPopup(true);
                         }
-                        setShowPopup(true);
                     });
                 },
                 prefill: {
@@ -202,17 +191,49 @@ export default function UserCart() {
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-950 text-white font-sans">
             <nav className="justify-between items-center max-w-7xl mx-auto px-6 py-4 border-b border-gray-800">
                 <div className="max-w-7xl mx-auto flex justify-between items-center">
-                    <a href="#" className="text-3xl font-extrabold tracking-wide text-white">NEOTEX</a>
-
+                    <a href="#" className="text-3xl font-extrabold tracking-wide text-white">
+                        NEOTEX
+                    </a>
 
                     <div className="hidden md:flex space-x-6 text-sm font-medium tracking-wide">
-                        <a href="/home" className="text-gray-300 hover:text-white hover:underline hover:underline-offset-4 transition duration-200">Home</a>
-                        <a href="/booking" className="text-gray-300 hover:text-white hover:underline hover:underline-offset-4 transition duration-200">Shop Now</a>
-                        <a href="/cart" className="text-gray-300 hover:text-white hover:underline hover:underline-offset-4 transition duration-200">Cart</a>
-                        <a href="/history" className="text-gray-300 hover:text-white hover:underline hover:underline-offset-4 transition duration-200">Order History</a>
-                        <a href="/about" className="text-gray-300 hover:text-white hover:underline hover:underline-offset-4 transition duration-200">About Us</a>
-                        <a href="/contact" className="text-gray-300 hover:text-white hover:underline hover:underline-offset-4 transition duration-200">Contact Us</a>
+                        <a
+                            href="/home"
+                            className="text-gray-300 hover:text-white hover:underline hover:underline-offset-4 transition duration-200"
+                        >
+                            Home
+                        </a>
+                        <a
+                            href="/booking"
+                            className="text-gray-300 hover:text-white hover:underline hover:underline-offset-4 transition duration-200"
+                        >
+                            Shop Now
+                        </a>
+                        <a
+                            href="/cart"
+                            className="text-gray-300 hover:text-white hover:underline hover:underline-offset-4 transition duration-200"
+                        >
+                            Cart
+                        </a>
+                        <a
+                            href="/history"
+                            className="text-gray-300 hover:text-white hover:underline hover:underline-offset-4 transition duration-200"
+                        >
+                            Order History
+                        </a>
+                        <a
+                            href="/about"
+                            className="text-gray-300 hover:text-white hover:underline hover:underline-offset-4 transition duration-200"
+                        >
+                            About Us
+                        </a>
+                        <a
+                            href="/contact"
+                            className="text-gray-300 hover:text-white hover:underline hover:underline-offset-4 transition duration-200"
+                        >
+                            Contact Us
+                        </a>
                     </div>
+
                     <div>
                         <div className="hidden md:flex space-x-3 text-sm min-w-[180px]">
                             <p className={expiresIn ? "visible" : "invisible"}>
@@ -220,9 +241,6 @@ export default function UserCart() {
                             </p>
                         </div>
                     </div>
-
-
-
 
                     <div className="hidden md:flex relative z-10">
                         <button onClick={toggleDropdown}>
@@ -234,40 +252,79 @@ export default function UserCart() {
                         </button>
                         {dropdownOpen && (
                             <div className="absolute right-0 mt-2 w-48 bg-gray-900 text-white rounded-lg shadow-xl border border-gray-700">
-                                <a href="/userProfile" className="flex items-center px-4 py-2 hover:bg-gray-800"><User size={18} className="mr-2" /> Profile</a>
+                                <a
+                                    href="/userProfile"
+                                    className="flex items-center px-4 py-2 hover:bg-gray-800"
+                                >
+                                    <User size={18} className="mr-2" /> Profile
+                                </a>
                                 <hr className="border-gray-700" />
-                                <button onClick={handleLogout} className="w-full text-left px-4 py-2 flex items-center hover:bg-gray-800">
+                                <button
+                                    onClick={handleLogout}
+                                    className="w-full text-left px-4 py-2 flex items-center hover:bg-gray-800"
+                                >
                                     <LogOut size={18} className="mr-2" /> Logout
                                 </button>
                             </div>
                         )}
                     </div>
 
-
                     <button onClick={toggleMobileMenu} className="md:hidden text-white">
                         {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
                     </button>
                 </div>
 
-
                 {mobileMenuOpen && (
                     <div className="md:hidden mt-4 space-y-2">
-                        <a href="/home" className="block px-4 py-2 text-sm font-medium text-gray-300 hover:text-white hover:underline hover:underline-offset-4 transition duration-200">Home</a>
-                        <a href="/booking" className="block px-4 py-2 text-sm font-medium text-gray-300 hover:text-white hover:underline hover:underline-offset-4 transition duration-200">Shop Now</a>
-                        <a href="/cart" className="block px-4 py-2 text-sm font-medium text-gray-300 hover:text-white hover:underline hover:underline-offset-4 transition duration-200">Cart</a>
-                        <a href="/history" className="block px-4 py-2 text-sm font-medium text-gray-300 hover:text-white hover:underline hover:underline-offset-4 transition duration-200">Order History</a>
-                        <a href="/about" className="block px-4 py-2 text-sm font-medium text-gray-300 hover:text-white hover:underline hover:underline-offset-4 transition duration-200">About Us</a>
-                        <a href="/contact" className="block px-4 py-2 text-sm font-medium text-gray-300 hover:text-white hover:underline hover:underline-offset-4 transition duration-200">Contact Us</a>
-
+                        <a
+                            href="/home"
+                            className="block px-4 py-2 text-sm font-medium text-gray-300 hover:text-white hover:underline hover:underline-offset-4 transition duration-200"
+                        >
+                            Home
+                        </a>
+                        <a
+                            href="/booking"
+                            className="block px-4 py-2 text-sm font-medium text-gray-300 hover:text-white hover:underline hover:underline-offset-4 transition duration-200"
+                        >
+                            Shop Now
+                        </a>
+                        <a
+                            href="/cart"
+                            className="block px-4 py-2 text-sm font-medium text-gray-300 hover:text-white hover:underline hover:underline-offset-4 transition duration-200"
+                        >
+                            Cart
+                        </a>
+                        <a
+                            href="/history"
+                            className="block px-4 py-2 text-sm font-medium text-gray-300 hover:text-white hover:underline hover:underline-offset-4 transition duration-200"
+                        >
+                            Order History
+                        </a>
+                        <a
+                            href="/about"
+                            className="block px-4 py-2 text-sm font-medium text-gray-300 hover:text-white hover:underline hover:underline-offset-4 transition duration-200"
+                        >
+                            About Us
+                        </a>
+                        <a
+                            href="/contact"
+                            className="block px-4 py-2 text-sm font-medium text-gray-300 hover:text-white hover:underline hover:underline-offset-4 transition duration-200"
+                        >
+                            Contact Us
+                        </a>
 
                         <div className="px-4 mt-4 border-t border-gray-700 pt-4">
-                            <a href="/userProfile" className="flex items-center px-4 py-2 hover:bg-gray-800"><User size={18} className="mr-2" /> Profile</a>
+                            <a
+                                href="/userProfile"
+                                className="flex items-center px-4 py-2 hover:bg-gray-800"
+                            >
+                                <User size={18} className="mr-2" /> Profile
+                            </a>
                             <button onClick={handleLogout} className="flex items-center py-2 text-white">
                                 <LogOut size={18} className="mr-2" /> Logout
                             </button>
                         </div>
                     </div>
-
                 )}
             </nav>
 
@@ -287,10 +344,12 @@ export default function UserCart() {
                 <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
                     <p className="text-lg md:text-2xl text-gray-300 font-semibold">
                         🛒 Total Price:{" "}
-                        <span className="text-green-400 font-bold text-2xl">₹{totalPrice || 0}</span>
+                        <span className="text-green-400 font-bold text-2xl">
+                            ₹{totalPrice || 0}
+                        </span>
                     </p>
                     <button
-                        className={`bg-red-700 hover:bg-red-600 text-white font-semibold py-2 px-6 rounded-lg transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed`}
+                        className="bg-red-700 hover:bg-red-600 text-white font-semibold py-2 px-6 rounded-lg transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                         onClick={flushCart}
                         disabled={loading || !cartItems?.length}
                     >
@@ -371,18 +430,23 @@ export default function UserCart() {
                 )}
             </section>
 
-
             <footer className="text-center py-12 border-t border-gray-800 text-gray-400 px-4">
                 <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-sm">
                     <div>
                         <h3 className="text-white font-semibold">About Us</h3>
-                        <p className="mt-2 text-gray-500">We bring the latest high-performance laptops to power your future.</p>
+                        <p className="mt-2 text-gray-500">
+                            We bring the latest high-performance laptops to power your future.
+                        </p>
                     </div>
                     <div>
                         <h3 className="text-white font-semibold">Quick Links</h3>
                         <ul className="mt-2 space-y-2">
                             {["Home", "Shop", "About", "Contact"].map((link, idx) => (
-                                <li key={idx}><a href="#" className="hover:text-white transition">{link}</a></li>
+                                <li key={idx}>
+                                    <a href="#" className="hover:text-white transition">
+                                        {link}
+                                    </a>
+                                </li>
                             ))}
                         </ul>
                     </div>
@@ -390,7 +454,9 @@ export default function UserCart() {
                         <h3 className="text-white font-semibold">Follow Us</h3>
                         <div className="mt-2 flex space-x-4 justify-center">
                             {["Twitter", "Facebook", "Instagram"].map((social, i) => (
-                                <a key={i} href="#" className="hover:text-white transition">{social}</a>
+                                <a key={i} href="#" className="hover:text-white transition">
+                                    {social}
+                                </a>
                             ))}
                         </div>
                     </div>
@@ -406,7 +472,12 @@ export default function UserCart() {
                     <div className="bg-gray-800 rounded-lg p-6 max-w-sm text-center cursor-pointer">
                         <p className="text-white text-lg">{popupMessage}</p>
                         <button
-                            onClick={() => setShowPopup(false)}
+                            onClick={() => {
+                                setShowPopup(false);
+                                if (reloadOnClose) {
+                                    window.location.reload();
+                                }
+                            }}
                             className="mt-4 px-4 py-2 bg-blue-600 rounded hover:bg-blue-700 text-white"
                         >
                             Close

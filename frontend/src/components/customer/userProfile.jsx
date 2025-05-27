@@ -59,7 +59,7 @@ export default function UserProfile() {
     const handleSubmit = () => {
         dispatch(updateProfile({ userId, username, password })).then((response) => {
             if (response.payload.message === "Profile updated successfully") {
-                setPopupMessage("Profile updated successfully");
+                setPopupMessage("Profile updated successfully completed");
                 setShowPopup(true);
                 
             }else{

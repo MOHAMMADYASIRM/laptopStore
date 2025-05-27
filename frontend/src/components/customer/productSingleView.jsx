@@ -19,8 +19,8 @@ export default function UserProductSingleView() {
     const { id } = useParams();
     const userId = localStorage.getItem("userId");
     const loggedEmail = localStorage.getItem("userEmail");
-    
-    
+
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { expiresIn } = useTokenWatcher();
@@ -63,11 +63,19 @@ export default function UserProductSingleView() {
     };
 
     const handleQuantityChange = (e) => {
-        let value = parseInt(e.target.value);
-        if (isNaN(value) || value < 1) value = 1;
-        if (value > stock) value = stock;
-        setQuantity(value);
-    };
+    const input = e.target.value;
+    if (input === '') {
+        setQuantity('');
+        return;
+    }
+    let value = parseInt(input);
+    if (isNaN(value)) return;
+    if (value < 1) value = 1;
+    if (value > stock) value = stock;
+    setQuantity(value);
+};
+
+
 
     const addToCart = (productId) => {
         if (quantity > stock) {

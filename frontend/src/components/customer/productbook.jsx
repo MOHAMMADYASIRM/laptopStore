@@ -147,7 +147,13 @@ export default function ProductList() {
                         <a href="/history" className="block px-4 py-2 text-sm font-medium text-gray-300 hover:text-white hover:underline hover:underline-offset-4 transition duration-200">Order History</a>
                         <a href="/about" className="block px-4 py-2 text-sm font-medium text-gray-300 hover:text-white hover:underline hover:underline-offset-4 transition duration-200">About Us</a>
                         <a href="/contact" className="block px-4 py-2 text-sm font-medium text-gray-300 hover:text-white hover:underline hover:underline-offset-4 transition duration-200">Contact Us</a>
+                        <a href="/userProfile" className="flex items-center px-4 py-2 hover:bg-gray-800"><User size={18} className="mr-2" /> Profile</a>
+                        <button onClick={handleLogout} className="flex items-center py-2 text-white">
+                            <LogOut size={18} className="mr-2" /> Logout
+                        </button>
+
                     </div>
+
                 )}
             </nav>
 
