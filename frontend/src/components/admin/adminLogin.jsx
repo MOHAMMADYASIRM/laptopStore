@@ -9,6 +9,7 @@ export default function AdminLogin() {
     const nav = useNavigate();
     const dispatch = useDispatch();
     const { loading, error } = useSelector((state) => state.auth);
+    const [menuOpen, setMenuOpen] = useState(false);
 
     const [adminEmail, setAdminEmail] = useState("");
     const [adminPassword, setAdminPassword] = useState("");
@@ -21,25 +22,25 @@ export default function AdminLogin() {
 
         if (!adminEmail || !adminPassword) {
             return setErrorMsg("Please enter email and password!");
-        }else{
+        } else {
             dispatch(adminLogin({
-                adminEmail : adminEmail,
-                adminPassword : adminPassword
+                adminEmail: adminEmail,
+                adminPassword: adminPassword
             })).then((response) => {
                 if (response.payload === "Email Not Exists..!") {
                     return setErrorMsg("Email Not Exists..!");
-                }else if(response.payload === "incorrect password"){
+                } else if (response.payload === "incorrect password") {
                     console.log(response.payload);
                     return setErrorMsg("incorrect password..!");
                 }
                 console.log("Login successful!", response.payload);
-                nav("/adminHome"); 
+                nav("/adminHome");
             })
-            .catch((error) => {
-                console.log("error:", error);
-            });
+                .catch((error) => {
+                    console.log("error:", error);
+                });
         }
-        
+
     };
 
     return (
@@ -55,30 +56,26 @@ export default function AdminLogin() {
                 </div>
 
                 <button
-                    // onClick={() => setMenuOpen(!menuOpen)}
+                    onClick={() => setMenuOpen(!menuOpen)}
                     className="md:hidden text-white focus:outline-none"
                 >
                     ☰
                 </button>
             </nav>
 
-            {/* {menuOpen && ( */}
-                <div className="md:hidden bg-gray-900 py-4 px-6">
-                    <a href="#" className="block text-gray-100 hover:text-white transition py-2">Home</a>
-                    <a href="#" className="block text-gray-100 hover:text-white transition py-2">Shop</a>
-                    <a href="#" className="block text-gray-100 hover:text-white transition py-2">About</a>
+            <div className="md:hidden bg-gray-900 py-4 px-6">
+                <a href="#" className="block text-gray-100 hover:text-white transition py-2">Home</a>
+                <a href="#" className="block text-gray-100 hover:text-white transition py-2">Shop</a>
+                <a href="#" className="block text-gray-100 hover:text-white transition py-2">About</a>
 
-                    <a href="#" className="block text-gray-100 hover:text-white transition py-2">Contact</a>
-                </div>
-            {/* )} */}
-<br />
+                <a href="#" className="block text-gray-100 hover:text-white transition py-2">Contact</a>
+            </div>
+            <br />
             <div className="flex justify-center items-center flex-grow px-4">
                 <form className="bg-gray-800 p-10 rounded-2xl shadow-xl w-full max-w-md border border-gray-700" onSubmit={handleLogin}>
                     <h2 className="text-3xl font-bold text-center mb-6 text-white">Admin Login</h2>
                     {errorMsg && <p className="text-red-500 font-semibold text-center animate-pulse">{errorMsg}</p>}
                     <div className="mb-4">
-                    adminEmail = AdminNeoTex@gmail.com
-                    adminpassword = AdminNeoTex@123
                         <label className="block text-gray-300 mb-1">Admin Email</label>
                         <input
                             type="email"
