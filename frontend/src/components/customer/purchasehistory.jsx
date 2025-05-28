@@ -30,7 +30,7 @@ export default function UserBookings() {
     }, [dispatch, userId]);
 
     const { bookings = [], loading, error, totalPrice } = useSelector((state) => state.booking || {});
-    console.log(bookings);
+    console.log("bookings", bookings);
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-950 text-white font-sans">
