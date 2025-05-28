@@ -164,8 +164,8 @@ export default function UserBookings() {
                                         <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2 text-sm text-gray-300">
                                             <p><span className="font-semibold text-white">Model:</span> {booking.productId.productModel}</p>
                                             <p><span className="font-semibold text-white">Processor:</span> {booking.productId.productProcessor}</p>
-                                            <p><span className="font-semibold text-white">RAM:</span> {booking.productId.productRam} GB</p>
-                                            <p><span className="font-semibold text-white">Storage:</span> {booking.productId.productStorage} GB</p>
+                                            <p><span className="font-semibold text-white">RAM:</span> {booking.productId.productRam}</p>
+                                            <p><span className="font-semibold text-white">Storage:</span> {booking.productId.productStorage}</p>
                                             <p><span className="font-semibold text-white">Quantity:</span> {booking.quantity}</p>
                                             <p><span className="font-semibold text-white">Total Price:</span> ₹{booking.price * booking.quantity}/-</p>
                                         </div>
