@@ -171,6 +171,7 @@ const brandDelete = async (req, res) => {
         if (!brand) {
             return res.status(404).json({ message: "Brand not found" });
         }
+        await products.deleteMany({ brandId: brandId });
         await Brands.deleteOne({ _id: brandId });
         res.status(200).json({ message: "Brand deleted successfully" });
     } catch (error) {

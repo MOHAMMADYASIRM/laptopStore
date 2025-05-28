@@ -28,16 +28,13 @@ export default function AdminUserMgmt() {
         window.location.reload();
     };
 
-    const confirmDelete = (userId) => {
-        setSelectedUserId(userId);
-        setDeletePopup(true);
-    };
+    
     const cancelDelete = () => {
         setSelectedUserId(null);
         setDeletePopup(false);
     };
-    const handleDeleteConfirmed = () => {
-        dispatch(handleUserDeleteThunk(selectedUserId));
+    const handleDeleteConfirmed = (userId) => {
+        dispatch(handleUserDeleteThunk(userId));
         setDeletePopup(false);
         setSelectedUserId(null);
         window.location.reload();
@@ -187,7 +184,7 @@ export default function AdminUserMgmt() {
                                                     {user.userBan ? "Unban" : "Ban"}
                                                 </button>
                                                 <button
-                                                    onClick={() => confirmDelete(user._id)}
+                                                    onClick={() => handleDeleteConfirmed(user._id)}
                                                     className="px-2 sm:px-3 py-1 bg-red-600 hover:bg-red-700 text-xs sm:text-sm rounded font-semibold"
                                                 >
                                                     Delete
