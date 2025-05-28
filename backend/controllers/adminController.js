@@ -4,6 +4,7 @@ const Brands = require('../model/brandModel');
 const products = require('../model/brandProducts');
 const booking = require('../model/userBooking');
 const complaint = require('../model/complaintsModel');
+const carts = require('../model/userCartModel');
 const bcrypt = require('bcrypt');
 const dotenv = require('dotenv');
 
@@ -173,6 +174,7 @@ const brandDelete = async (req, res) => {
         }
         await products.deleteMany({ brandId: brandId });
         await booking.deleteMany({ brandId: brandId });
+        await carts.deleteMany({ brandId: brandId });
         await Brands.deleteOne({ _id: brandId });
         res.status(200).json({ message: "Brand deleted successfully" });
     } catch (error) {

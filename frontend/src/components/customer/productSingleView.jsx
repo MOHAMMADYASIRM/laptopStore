@@ -63,28 +63,28 @@ export default function UserProductSingleView() {
     };
 
     const handleQuantityChange = (e) => {
-    const input = e.target.value;
-    if (input === '') {
-        setQuantity('');
-        return;
-    }
-    let value = parseInt(input);
-    if (isNaN(value)) return;
-    if (value < 1) value = 1;
-    if (value > stock) value = stock;
-    setQuantity(value);
-};
+        const input = e.target.value;
+        if (input === '') {
+            setQuantity('');
+            return;
+        }
+        let value = parseInt(input);
+        if (isNaN(value)) return;
+        if (value < 1) value = 1;
+        if (value > stock) value = stock;
+        setQuantity(value);
+    };
 
 
 
-    const addToCart = (productId) => {
+    const addToCart = (productId, brandId) => {
         if (quantity > stock) {
             setPopupMessage(`Only ${stock} items in stock. Please reduce quantity.`);
             setShowPopup(true);
             return;
         }
 
-        dispatch(addToCartThunk({ productId, userId, quantity })).then((response) => {
+        dispatch(addToCartThunk({ productId, brandId, userId, quantity })).then((response) => {
             if (response.payload === "Item already in cart") {
                 setPopupMessage("Item is already in your cart.");
             } else if (response.payload?.message === "Product added to cart") {
@@ -384,7 +384,7 @@ export default function UserProductSingleView() {
                                 </div>
 
                                 <button
-                                    onClick={() => addToCart(product._id)}
+                                    onClick={() => addToCart(product._id, product.brandId)}
                                     disabled={stock === 0}
                                     className={`bg-blue-600 hover:bg-blue-500 transition py-3 px-6 rounded-lg font-semibold text-white text-base w-full sm:w-auto ${stock === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
                                 >

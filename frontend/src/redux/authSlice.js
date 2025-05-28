@@ -255,10 +255,10 @@ export const fetchProduct = createAsyncThunk(
 
 export const addToCartThunk = createAsyncThunk(
     "cart/addToCart",
-    async ({ productId, userId }, { rejectWithValue }) => {
+    async ({ productId, brandId, userId }, { rejectWithValue }) => {
         try {
 
-            const response = await axios.post(`${url}/api/auth/add-cart`, { productId, userId }, {
+            const response = await axios.post(`${url}/api/auth/add-cart`, { productId, brandId, userId }, {
                 headers: { "Content-Type": "application/json" },
             });
             return response.data;

@@ -1,6 +1,7 @@
 const products = require('../model/brandProducts');
 const cart = require('../model/userCartModel');
 const Users = require('../model/userModel');
+const brands = require('../model/brandModel');
 
 const dotenv = require('dotenv');
 
@@ -9,8 +10,9 @@ dotenv.config();
 
 const addToCart = async (req, res) => {
     try {
-        const { userId, productId } = req.body;
+        const { userId, brandId, productId } = req.body;
         const user = await Users.findById(userId);
+        const brand = await brands.findById(brandId);
         const product = await products.findById(productId);
         if (!user) {
             return res.status(401).json({ message: "User not found" });
@@ -18,8 +20,12 @@ const addToCart = async (req, res) => {
         if (!product) {
             return res.status(404).json({ message: "Product not found" });
         }
+        if (!brand) {
+            return res.status(404).json({ message: "brand not found" });
+        }
         const existingItem = await cart.findOne({
             userId: userId,
+            brandId: brandId,
             "items.productId": productId,
         });
         if (existingItem) {
@@ -27,6 +33,7 @@ const addToCart = async (req, res) => {
         }
         const newCartItem = new cart({
             userId,
+            brandId,
             items: [{ productId }],
             totalPrice: product.productPrice,
         });
