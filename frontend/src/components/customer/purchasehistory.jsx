@@ -134,73 +134,87 @@ export default function UserBookings() {
                     {!loading &&
                         !error &&
                         bookings.map((booking) => (
-                            <div
-                                key={booking.itemId}
-                                className="bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-700 rounded-2xl shadow-xl hover:shadow-2xl transition duration-300"
-                            >
-                                <div className="flex flex-col md:flex-row gap-6 p-6">
-                                    {/* Product Image */}
-                                    <div className="flex-shrink-0 flex flex-col items-center justify-center w-full md:w-1/4">
-                                        <img
-                                            src={booking.productId.productImage}
-                                            alt={booking.productId.productName}
-                                            className="w-36 h-36 object-cover rounded-lg border border-gray-700"
-                                        />
-                                        <p className="text-sm text-gray-400 mt-2">Booking ID: #{booking.bookingId.slice(-6)}</p>
+                            !booking.productId ? (
+                                <div
+                                    key={booking.itemId}
+                                    className="bg-gradient-to-br from-gray-900 to-gray-800 border border-red-600 rounded-2xl shadow-xl p-6 flex flex-col items-center justify-center text-center"
+                                >
+                                    <div className="flex flex-col items-center space-y-3">
+                                        <div className="w-20 h-20 flex items-center justify-center bg-red-100 text-red-600 rounded-full text-3xl">
+                                            ⚠️
+                                        </div>
+                                        <p className="text-xl font-semibold text-red-500">Product Expired</p>
+                                        <p className="text-sm text-gray-400">
+                                            The product associated with this booking is no longer available.
+                                        </p>
+                                        <p className="text-sm text-gray-500 mt-1">Booking ID: #{booking.bookingId.slice(-6)}</p>
                                     </div>
-
-                                    {/* Booking Details */}
-                                    <div className="flex-1 space-y-3">
-                                        {/* Title & Date */}
-                                        <div className="flex justify-between items-start">
-                                            <h3 className="text-2xl font-semibold text-white">
-                                                {booking.productId.productName}
-                                            </h3>
-                                            <span className="text-sm text-gray-400 whitespace-nowrap">
-                                                {new Date(booking.bookingDate).toLocaleDateString()}
-                                            </span>
+                                </div>
+                            ) : (
+                                <div
+                                    key={booking.itemId}
+                                    className="bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-700 rounded-2xl shadow-xl hover:shadow-2xl transition duration-300"
+                                >
+                                    <div className="flex flex-col md:flex-row gap-6 p-6">
+                                        <div className="flex-shrink-0 flex flex-col items-center justify-center w-full md:w-1/4">
+                                            <img
+                                                src={booking.productId.productImage}
+                                                alt={booking.productId.productName}
+                                                className="w-36 h-36 object-cover rounded-lg border border-gray-700"
+                                            />
+                                            <p className="text-sm text-gray-400 mt-2">Booking ID: #{booking.bookingId.slice(-6)}</p>
                                         </div>
+                                        <div className="flex-1 space-y-3">
+                                            <div className="flex justify-between items-start">
+                                                <h3 className="text-2xl font-semibold text-white">
+                                                    {booking.productId.productName}
+                                                </h3>
+                                                <span className="text-sm text-gray-400 whitespace-nowrap">
+                                                    {new Date(booking.bookingDate).toLocaleDateString()}
+                                                </span>
+                                            </div>
 
-                                        <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2 text-sm text-gray-300">
-                                            <p><span className="font-semibold text-white">Model:</span> {booking.productId.productModel}</p>
-                                            <p><span className="font-semibold text-white">Processor:</span> {booking.productId.productProcessor}</p>
-                                            <p><span className="font-semibold text-white">RAM:</span> {booking.productId.productRam}</p>
-                                            <p><span className="font-semibold text-white">Storage:</span> {booking.productId.productStorage}</p>
-                                            <p><span className="font-semibold text-white">Quantity:</span> {booking.quantity}</p>
-                                            <p><span className="font-semibold text-white">Total Price:</span> ₹{booking.price * booking.quantity}/-</p>
-                                        </div>
+                                            <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2 text-sm text-gray-300">
+                                                <p><span className="font-semibold text-white">Model:</span> {booking.productId.productModel}</p>
+                                                <p><span className="font-semibold text-white">Processor:</span> {booking.productId.productProcessor}</p>
+                                                <p><span className="font-semibold text-white">RAM:</span> {booking.productId.productRam}</p>
+                                                <p><span className="font-semibold text-white">Storage:</span> {booking.productId.productStorage}</p>
+                                                <p><span className="font-semibold text-white">Quantity:</span> {booking.quantity}</p>
+                                                <p><span className="font-semibold text-white">Total Price:</span> ₹{booking.price * booking.quantity}/-</p>
+                                            </div>
 
-                                        {/* Payment Status */}
-                                        <div className="flex items-center gap-3 mt-4">
-                                            <span
-                                                className={`px-3 py-1 rounded-full text-sm font-semibold ${booking.paymentStatus === "Completed"
+                                            <div className="flex items-center gap-3 mt-4">
+                                                <span
+                                                    className={`px-3 py-1 rounded-full text-sm font-semibold ${booking.paymentStatus === "Completed"
                                                         ? "bg-green-600 text-white"
                                                         : booking.paymentStatus === "Pending"
                                                             ? "bg-yellow-500 text-black"
                                                             : "bg-red-600 text-white"
-                                                    }`}
-                                            >
-                                                💳 Payment: {booking.paymentStatus}
-                                            </span>
+                                                        }`}
+                                                >
+                                                    💳 Payment: {booking.paymentStatus}
+                                                </span>
 
-                                            <span
-                                                className={`px-3 py-1 rounded-full text-sm font-semibold ${booking.deliveryStatus === "Delivered"
+                                                <span
+                                                    className={`px-3 py-1 rounded-full text-sm font-semibold ${booking.deliveryStatus === "Delivered"
                                                         ? "bg-green-600 text-white"
                                                         : booking.deliveryStatus === "Out for Delivery"
                                                             ? "bg-blue-500 text-white"
                                                             : booking.deliveryStatus === "Shipped"
                                                                 ? "bg-yellow-500 text-black"
                                                                 : "bg-gray-500 text-white"
-                                                    }`}
-                                            >
-                                                🚚 Delivery: {booking.deliveryStatus}
-                                            </span>
+                                                        }`}
+                                                >
+                                                    🚚 Delivery: {booking.deliveryStatus}
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            )
                         ))}
                 </div>
+
 
                 {!loading && !error && bookings.length > 0 && (
                     <div className="mt-16 text-center">

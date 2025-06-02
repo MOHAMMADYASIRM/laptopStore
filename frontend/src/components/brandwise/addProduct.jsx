@@ -410,7 +410,7 @@ export default function BrandAddProduct() {
                     <div>
                         <label className="text-gray-300 block mb-1">Image URL</label>
                         <input
-                            type="text"
+                            type="url"
                             name="image"
                             value={formData.image}
                             onChange={handleChange}
