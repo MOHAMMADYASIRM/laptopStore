@@ -26,15 +26,18 @@ export default function AdminBrandManagement() {
     const toggleSidebar = () => setSidebarOpen((o) => !o);
     const handleLogout = () => nav("/");
 
-    const brandVerify = (id) => dispatch(handleBrandVerificationThunk(id)).then(() => {
-        window.location.reload();
-    });
-    const handleBan = (id) => dispatch(handleBrandBanThunk(id)).then(() => {
-        window.location.reload();
-    });
-    const handleDeleteBrand = (id) => dispatch(handleBrandDeleteThunk(id)).then(() => {
-        window.location.reload();
-    });
+    const brandVerify = async (id) => {
+        await dispatch(handleBrandVerificationThunk(id))
+        dispatch(getBrandsThunk())
+    }
+    const handleBan = async (id) => {
+        await dispatch(handleBrandBanThunk(id))
+        dispatch(getBrandsThunk())
+    }
+    const handleDeleteBrand = async (id) => {
+        await dispatch(handleBrandDeleteThunk(id))
+        dispatch(getBrandsThunk())
+    }
 
     const filteredBrands = allBrands.filter(
         (brand) =>
@@ -111,7 +114,7 @@ export default function AdminBrandManagement() {
                         </button>
                         {dropdownOpen && (
                             <div className="z-50 absolute right-0 mt-2 w-40 bg-white text-black rounded shadow-lg">
-                                
+
                                 <button
                                     onClick={handleLogout}
                                     className="flex w-full items-center px-3 py-2 hover:bg-gray-200"
