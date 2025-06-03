@@ -35,8 +35,9 @@ export default function AdminBrandManagement() {
         dispatch(getBrandsThunk())
     }
     const handleDeleteBrand = async (id) => {
-        await dispatch(handleBrandDeleteThunk(id))
-        dispatch(getBrandsThunk())
+        await dispatch(handleBrandDeleteThunk(id)).then(() => {
+            dispatch(getBrandsThunk())
+        });
     }
 
     const filteredBrands = allBrands.filter(
