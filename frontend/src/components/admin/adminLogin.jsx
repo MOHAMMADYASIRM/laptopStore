@@ -1,15 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-// import { loginAdmin } from "../../redux/authSlice";
 import LoadingPopup from "../popups/loading";
 import { adminLogin } from "../../redux/authSlice";
 
 export default function AdminLogin() {
     const nav = useNavigate();
     const dispatch = useDispatch();
-    const { loading, error } = useSelector((state) => state.auth);
-    const [menuOpen, setMenuOpen] = useState(false);
 
     const [adminEmail, setAdminEmail] = useState("");
     const [adminPassword, setAdminPassword] = useState("");
@@ -47,29 +44,7 @@ export default function AdminLogin() {
         <div className="bg-black min-h-screen text-white font-sans">
             <nav className="flex justify-between items-center max-w-7xl mx-auto px-6 py-4 border-b border-gray-800">
                 <a href="#" className="text-3xl font-bold tracking-wide text-white">NEOTEX</a>
-
-                <div className="hidden md:flex space-x-6">
-                    <a href="#" className="text-gray-100 hover:text-white transition">Home</a>
-                    <a href="#" className="text-gray-100 hover:text-white transition">Shop</a>
-                    <a href="#" className="text-gray-100 hover:text-white transition">About</a>
-                    <a href="#" className="text-gray-100 hover:text-white transition">Contact</a>
-                </div>
-
-                <button
-                    onClick={() => setMenuOpen(!menuOpen)}
-                    className="md:hidden text-white focus:outline-none"
-                >
-                    ☰
-                </button>
             </nav>
-
-            <div className="md:hidden bg-gray-900 py-4 px-6">
-                <a href="#" className="block text-gray-100 hover:text-white transition py-2">Home</a>
-                <a href="#" className="block text-gray-100 hover:text-white transition py-2">Shop</a>
-                <a href="#" className="block text-gray-100 hover:text-white transition py-2">About</a>
-
-                <a href="#" className="block text-gray-100 hover:text-white transition py-2">Contact</a>
-            </div>
             <br />
             <div className="flex justify-center items-center flex-grow px-4">
                 <form className="bg-gray-800 p-10 rounded-2xl shadow-xl w-full max-w-md border border-gray-700" onSubmit={handleLogin}>

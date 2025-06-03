@@ -80,7 +80,6 @@ export const adminLogin = createAsyncThunk(
                 headers: { "Content-Type": "application/json" },
             });
             return response.data;
-
         } catch (error) {
             if (error.response?.status === 400) {
                 return rejectWithValue(error.response.data.message);

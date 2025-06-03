@@ -13,7 +13,7 @@ export default function BrandRegister() {
     const [brand, setBrandName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState();
+    const [confirmPassword, setConfirmPassword] = useState("");
 
     const [hasMinLength, setHasMinLength] = useState(false);
     const [hasUpper, setHasUpper] = useState(false);
@@ -39,6 +39,10 @@ export default function BrandRegister() {
         e.preventDefault();
 
         const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+        if (password.toLowerCase() === email.toLowerCase()) {
+            return setError("password must be different from email...");
+        }
 
         if (!brand || !email || !password || !confirmPassword) {
             return setError("Enter All Details Properly...!");
