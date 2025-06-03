@@ -37,7 +37,7 @@ export default function UserProfile() {
     const closePopup = () => {
         setShowPopup(false);
         setPopupMessage("");
-        window.location.reload()
+        dispatch(getProfile(userId)); 
     };
 
     useEffect(() => {
