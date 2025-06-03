@@ -25,11 +25,11 @@ export default function AdminLogin() {
                 adminPassword: adminPassword
             })).then((response) => {
                 console.log(response);
-
                 if (response.payload === "Wrong Email") {
-                    return setErrorMsg("Email Not Exists..!");
-                } else if (response.payload === "incorrect password") {
-                    return setErrorMsg("incorrect password..!");
+                    return setErrorMsg("Invaid Creditials");
+                }
+                if (response.payload === "incorrect password") {
+                    return setErrorMsg("Invaid Creditials");
                 }
                 console.log("Login successful!", response.payload);
                 nav("/adminHome");
