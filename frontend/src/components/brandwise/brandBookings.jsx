@@ -29,25 +29,16 @@ export default function BrandBookings() {
     setNewStatus("");
   };
 
-  const saveStatus = (bookingId) => {
+  const saveStatus = async (bookingId) => {
     if (!newStatus) return;
-    dispatch(updateDeliveryStatusThunk({ bookingId, status: newStatus }))
-      .unwrap()
-      .then(() => {
-        const scrollY = window.scrollY;
-        localStorage.setItem("scrollY", scrollY);
-        window.location.reload();
-      })
-      .catch((err) => console.error(err));
-  };
-
-  useEffect(() => {
-    const y = localStorage.getItem("scrollY");
-    if (y) {
-      window.scrollTo(0, parseInt(y));
-      localStorage.removeItem("scrollY");
+    try {
+      await dispatch(updateDeliveryStatusThunk({ bookingId, status: newStatus }));
+      dispatch(brandBookingsThunk(brandId));
+      cancelEditing();
+    } catch (err) {
+      console.error(err);
     }
-  }, []);
+  };
 
   const filtered = bookings.filter((b) =>
     b._id.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -88,76 +79,135 @@ export default function BrandBookings() {
         )}
 
         <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-          {filtered.map((booking) => (
-            <div
-              key={booking._id}
-              className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-6 rounded-2xl border border-gray-700 shadow-xl hover:shadow-2xl hover:scale-[1.03] transform transition-all duration-300 ease-in-out"
-            >
-              <h3 className="text-xl font-bold mb-4"> Booking ID:   <span className="text-xxs">{booking._id}</span></h3>
+          {filtered
+            .filter(
+              (booking) =>
+                Array.isArray(booking.items) &&
+                booking.items.length > 0 &&
+                booking.items.every((item) => item?.productId)
+            )
+            .map((booking) => (
+              <div
+                key={booking._id}
+                className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-6 rounded-2xl border border-gray-700 shadow-xl hover:shadow-2xl hover:scale-[1.03] transform transition-all duration-300 ease-in-out"
+              >
+                <h3 className="text-xl font-bold mb-4">
+                  Booking ID: <span className="text-xxs">{booking._id}</span>
+                </h3>
 
-              <div className="space-y-4">
-                {booking.items.map((item, idx) => (
-                  <div key={idx} className="flex items-center gap-4 border border-gray-700 p-3 rounded-md">
-                    <img
-                      src={item.productId?.productImage}
-                      alt={item.productId?.productName}
-                      className="w-20 h-20 object-cover rounded-md border border-gray-600"
-                    />
-                    <div>
-                      <p className="font-semibold">{item.productId?.productName}</p>
-                      <p className="text-gray-400 text-sm">{item.productId?.productModel}</p>
-                      <p className="text-green-400 text-sm">₹{item.productId?.productPrice}</p>
-                      <p className="text-gray-300 text-sm">Qty: {item.quantity}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                <div className="space-y-4">
+                  {booking.items
+                    .filter((item) => item?.productId)
+                    .map((item, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-center gap-4 border border-gray-700 p-3 rounded-md"
+                      >
+                        <img
+                          src={item.productId.productImage}
+                          alt={item.productId.productName}
+                          className="w-20 h-20 object-cover rounded-md border border-gray-600"
+                        />
+                        <div>
+                          <p className="font-semibold">{item.productId.productName}</p>
+                          <p className="text-gray-400 text-sm">
+                            {item.productId.productModel}
+                          </p>
+                          <p className="text-green-400 text-sm">
+                            ₹{item.productId.productPrice}
+                          </p>
+                          <p className="text-gray-300 text-sm">Qty: {item.quantity}</p>
+                        </div>
+                      </div>
+                    ))}
+                </div>
 
-              <div className="mt-4 border-t pt-3 text-sm text-gray-300 space-y-2">
-                <p><span className="font-semibold">Booked By:</span> {booking.userEmail}</p>
-                <p><span className="font-semibold">Total Price:</span> ₹{booking.totalPrice}</p>
-                <div className="flex items-center gap-3">Delivery Status:
-                  <span className={`font-semibold ${booking.deliveryStatus === "Not Shipped" ? "text-gray-500" : booking.deliveryStatus === "Shipped" ? "text-blue-500" : booking.deliveryStatus === "Out for Delivery" ? "text-orange-500" : booking.deliveryStatus === "Delivered" ? "text-green-600" : ""}`}> {booking.deliveryStatus}</span>
-                  {editingStatusId === booking._id ? (
-                    <>
-                      <select
-                        value={newStatus}
-                        onChange={(e) => setNewStatus(e.target.value)}
-                        className="bg-gray-800 text-white px-2 py-1 rounded"
-                      >
-                        <option disabled={booking.deliveryStatus !== "Not Shipped"} value="Not Shipped">Not Shipped</option>
-                        <option disabled={booking.deliveryStatus === "Out for Delivery" || booking.deliveryStatus === "Delivered"} value="Shipped">Shipped</option>
-                        <option disabled={booking.deliveryStatus !== "Shipped"} value="Out for Delivery">Out for Delivery</option>
-                        <option disabled={booking.deliveryStatus !== "Out for Delivery"} value="Delivered">Delivered</option>
-
-                      </select>
-                      <button
-                        onClick={() => saveStatus(booking._id)}
-                        className="bg-green-600 px-3 py-1 rounded hover:bg-green-700 transition"
-                      >
-                        Save
-                      </button>
-                      <button
-                        onClick={cancelEditing}
-                        className="bg-red-600 px-3 py-1 rounded hover:bg-red-700 transition"
-                      >
-                        Cancel
-                      </button>
-                    </>
-                  ) : (
-                    <button
-                      onClick={() => startEditing(booking)}
-                      className="bg-blue-600 px-3 py-1 rounded hover:bg-blue-700 transition"
-                      disabled={booking.deliveryStatus === "Delivered"}
+                <div className="mt-4 border-t pt-3 text-sm text-gray-300 space-y-2">
+                  <p>
+                    <span className="font-semibold">Booked By:</span> {booking.userEmail}
+                  </p>
+                  <p>
+                    <span className="font-semibold">Total Price:</span> ₹{booking.totalPrice}
+                  </p>
+                  <div className="flex items-center gap-3">
+                    Delivery Status:
+                    <span
+                      className={`font-semibold ${booking.deliveryStatus === "Not Shipped"
+                          ? "text-gray-500"
+                          : booking.deliveryStatus === "Shipped"
+                            ? "text-blue-500"
+                            : booking.deliveryStatus === "Out for Delivery"
+                              ? "text-orange-500"
+                              : booking.deliveryStatus === "Delivered"
+                                ? "text-green-600"
+                                : ""
+                        }`}
                     >
-                      Update Status
-                    </button>
-                  )}
+                      {booking.deliveryStatus}
+                    </span>
+                    {editingStatusId === booking._id ? (
+                      <>
+                        <select
+                          value={newStatus}
+                          onChange={(e) => setNewStatus(e.target.value)}
+                          className="bg-gray-800 text-white px-2 py-1 rounded"
+                        >
+                          <option
+                            disabled={booking.deliveryStatus !== "Not Shipped"}
+                            value="Not Shipped"
+                          >
+                            Not Shipped
+                          </option>
+                          <option
+                            disabled={
+                              booking.deliveryStatus === "Out for Delivery" ||
+                              booking.deliveryStatus === "Delivered"
+                            }
+                            value="Shipped"
+                          >
+                            Shipped
+                          </option>
+                          <option
+                            disabled={booking.deliveryStatus !== "Shipped"}
+                            value="Out for Delivery"
+                          >
+                            Out for Delivery
+                          </option>
+                          <option
+                            disabled={booking.deliveryStatus !== "Out for Delivery"}
+                            value="Delivered"
+                          >
+                            Delivered
+                          </option>
+                        </select>
+                        <button
+                          onClick={() => saveStatus(booking._id)}
+                          className="bg-green-600 px-3 py-1 rounded hover:bg-green-700 transition"
+                        >
+                          Save
+                        </button>
+                        <button
+                          onClick={cancelEditing}
+                          className="bg-red-600 px-3 py-1 rounded hover:bg-red-700 transition"
+                        >
+                          Cancel
+                        </button>
+                      </>
+                    ) : (
+                      <button
+                        onClick={() => startEditing(booking)}
+                        className="bg-blue-600 px-3 py-1 rounded hover:bg-blue-700 transition"
+                        disabled={booking.deliveryStatus === "Delivered"}
+                      >
+                        Update Status
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
+
       </section>
 
       <footer className="text-center py-12 border-t border-gray-700 text-gray-400">

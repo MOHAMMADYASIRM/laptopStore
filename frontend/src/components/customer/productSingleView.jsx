@@ -59,7 +59,7 @@ export default function UserProductSingleView() {
     const closePopup = () => {
         setShowPopup(false);
         setPopupMessage("");
-        window.location.reload();
+        dispatch(fetchProduct(id));
     };
 
     const handleQuantityChange = (e) => {
@@ -168,7 +168,7 @@ export default function UserProductSingleView() {
                         setPopupMessage("Payment was cancelled.");
                         setShowPopup(true);
                         dispatch(resetPaymentState());
-                        window.location.reload()
+                        dispatch(fetchProduct(id));
                     },
                 },
             };

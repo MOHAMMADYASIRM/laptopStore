@@ -50,8 +50,9 @@ export default function BrandProfile() {
     const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
     const hasUpperCase = /[A-Z]/.test(password);
 
-    const handleSave = () => {
-        dispatch(brandProfileUpdate({ brandId, ...formData }))
+    const handleSave = async () => {
+        await dispatch(brandProfileUpdate({ brandId, ...formData }))
+        dispatch(getBrandDetails(brandId));
         setEditing(false);
         setFormData(prev => ({ ...prev, password: "" }));
     };

@@ -71,34 +71,32 @@ export default function UserCart() {
         });
     };
 
-    const handleDecrease = (item) => {
+    const handleDecrease = async (item) => {
         if (item.quantity <= 1) return;
-        dispatch(
+        await dispatch(
             updateCartQuantity({
                 cartId: item.cartId,
                 productId: item.productId._id,
                 quantity: item.quantity - 1,
             })
-        ).then(() => {
-            window.location.reload();
-        });
+        );
+        dispatch(displayCart(userId));
     };
 
-    const handleIncrease = (item) => {
+    const handleIncrease = async (item) => {
         if (item.quantity >= item.productId.productStock) {
             setPopupMessage("Quantity exceeds available stock");
             setShowPopup(true);
             return;
         }
-        dispatch(
+        await dispatch(
             updateCartQuantity({
                 cartId: item.cartId,
                 productId: item.productId._id,
                 quantity: item.quantity + 1,
             })
-        ).then(() => {
-            window.location.reload();
-        });
+        );
+        dispatch(displayCart(userId));
     };
 
     const loadRazorpayScript = () =>
@@ -475,7 +473,7 @@ export default function UserCart() {
                             onClick={() => {
                                 setShowPopup(false);
                                 if (reloadOnClose) {
-                                    window.location.reload();
+                                    dispatch(displayCart(userId));
                                 }
                             }}
                             className="mt-4 px-4 py-2 bg-blue-600 rounded hover:bg-blue-700 text-white"
