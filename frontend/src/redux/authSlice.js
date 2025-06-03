@@ -74,9 +74,10 @@ export const registerBrand = createAsyncThunk(
 
 export const adminLogin = createAsyncThunk(
     "admin/adminauth",
-    async (adminData, { rejectWithValue }) => {
+    async ({ adminEmail, adminPassword }, { rejectWithValue }) => {
         try {
-            const response = await axios.post(`${url}/api/admin/adminauth`, adminData, {
+            console.log(adminEmail, adminPassword);
+            const response = await axios.post(`${url}/api/admin/adminauth`, { adminEmail, adminPassword }, {
                 headers: { "Content-Type": "application/json" },
             });
             return response.data;

@@ -14,6 +14,7 @@ dotenv.config();
 const adminLogin = async (req, res) => {
     try {
         const { adminEmail, adminPassword } = req.body;
+        console.log(adminEmail, adminPassword);
         const email = process.env.adminEmail;
         const password = process.env.adminpassword;
         if (!email) {
