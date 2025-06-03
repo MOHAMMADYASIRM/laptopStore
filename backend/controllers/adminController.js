@@ -5,7 +5,7 @@ const products = require('../model/brandProducts');
 const booking = require('../model/userBooking');
 const complaint = require('../model/complaintsModel');
 const carts = require('../model/userCartModel');
-const bcrypt = require('bcrypt');
+const featuresItems = require('../model/featuredProducts');
 const dotenv = require('dotenv');
 
 dotenv.config();
@@ -13,25 +13,18 @@ dotenv.config();
 
 const adminLogin = async (req, res) => {
     try {
-
-        // const { adminEmail, adminPassword } = req.body;
-        // console.log(adminEmail,adminPassword);
-        // const dbpass = await admins.findOne({ adminPassword })
-        // const email = process.env.adminEmail;
-        // const password = dbpass || process.env.adminPassword;
-
-        // if (!email) {
-
-        //     return res.status(400).json({ message: "Admin not Exists..." })
-
-        // } else if (adminEmail === email && adminPassword === password) {
-        //     console.log("succcess");
-        return res.status(200).json({ message: "Admin Login Success..." })
-        // }
-        // else {
-        //     console.log("failed");
-        //     return res.status(401).json({ message: "Wrong password..." })
-        // }
+        const { adminEmail, adminPassword } = req.body;
+        const dbpass = await admins.findOne({ adminPassword })
+        const email = process.env.adminEmail;
+        const password = dbpass || process.env.adminPassword;
+        if (!email) {
+            return res.status(400).json({ message: "Admin not Exists..." })
+        } else if (adminEmail === email && adminPassword === password) {
+            return res.status(200).json({ message: "Admin Login Success..." })
+        }
+        else {
+            return res.status(401).json({ message: "Wrong password..." })
+        }
     } catch (error) {
         return res.status(500).json({ message: "Server Error.." })
     }
@@ -173,8 +166,8 @@ const brandDelete = async (req, res) => {
             return res.status(404).json({ message: "Brand not found" });
         }
         await products.deleteMany({ brandId: brandId });
-        await booking.deleteMany({ brandId: brandId });
         await carts.deleteMany({ brandId: brandId });
+        await featuresItems.deleteMany({ brandId: brandId });
         await Brands.deleteOne({ _id: brandId });
         res.status(200).json({ message: "Brand deleted successfully" });
     } catch (error) {
