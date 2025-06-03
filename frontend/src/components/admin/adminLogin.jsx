@@ -24,9 +24,11 @@ export default function AdminLogin() {
                 adminEmail: adminEmail,
                 adminPassword: adminPassword
             })).then((response) => {
-                if (response.payload === "Admin not Exists...") {
+                console.log(response);
+
+                if (response.payload === "Wrong Email") {
                     return setErrorMsg("Email Not Exists..!");
-                } else if (response.payload === "Wrong password...") {
+                } else if (response.payload === "incorrect password") {
                     return setErrorMsg("incorrect password..!");
                 }
                 console.log("Login successful!", response.payload);
