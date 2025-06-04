@@ -142,7 +142,7 @@ export default function Home() {
                                     <img
                                         src={item.productId.productImage}
                                         alt={item.productId.productName}
-                                        className="w-28 h-28 object-cover rounded-lg border border-gray-700"
+                                        className="w-28 h-28 object-center rounded-lg border border-gray-700"
                                     />
                                 </div>
                                 <h3 className="text-xl font-semibold text-center">

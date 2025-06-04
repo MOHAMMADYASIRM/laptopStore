@@ -330,7 +330,7 @@ export default function ProductList() {
                                 <img
                                     src={p.productImage}
                                     alt={p.productName}
-                                    className="w-64 h-64 object-cover"
+                                    className="w-64 h-64 object-center"
                                 />
                                 {p.productStock === 0 && (
                                     <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
