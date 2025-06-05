@@ -56,6 +56,8 @@ export default function BrandProductEdit() {
         productDescription: product.productDescription || "",
       });
     }
+    console.log("processor",formData.productProcessor);
+    
   }, [product]);
 
   const handleChange = (e) => {
@@ -70,7 +72,7 @@ export default function BrandProductEdit() {
   };
 
   if (loading) return <p className="text-center text-white">Loading...</p>;
-  if (error) return <p className="text-center text-red-500">Error: {error}</p>;
+  if (error) return <p className="text-center text-white">{error}</p>;
 
   return (
     <div className="bg-gradient-to-r from-blue-900 to-black min-h-screen text-white font-sans">
