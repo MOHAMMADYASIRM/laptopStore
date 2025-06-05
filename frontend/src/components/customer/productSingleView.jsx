@@ -131,8 +131,8 @@ export default function UserProductSingleView() {
         if (order && product) {
             const options = {
                 key: "rzp_test_i9kC8hJ6A9Asbp",
-                amount: order.amount,
-                currency: order.currency * 100,
+                amount: order.amount*100,
+                currency: order.currency,
                 order_id: order.id,
                 name: "NEOTEX",
                 description: "Purchase of laptop",
