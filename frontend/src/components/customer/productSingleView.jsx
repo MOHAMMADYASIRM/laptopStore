@@ -124,14 +124,14 @@ export default function UserProductSingleView() {
             return;
         }
 
-        dispatch(createOrder(totalAmount));
+        dispatch(createOrder(totalAmount * 100));
     };
 
     useEffect(() => {
         if (order && product) {
             const options = {
                 key: "rzp_test_i9kC8hJ6A9Asbp",
-                amount: order.amount*100,
+                amount: order.amount * 100,
                 currency: order.currency,
                 order_id: order.id,
                 name: "NEOTEX",

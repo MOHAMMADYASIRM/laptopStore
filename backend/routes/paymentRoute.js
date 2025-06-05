@@ -14,7 +14,7 @@ router.post("/create-order", async (req, res) => {
     try {
         const { amount } = req.body;
         const options = {
-            amount: amount * 100,
+            amount: amount ,
             currency: "INR",
             receipt: `order_rcptid_${Math.floor(Math.random() * 10000)}`,
         };
