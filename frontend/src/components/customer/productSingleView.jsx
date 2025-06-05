@@ -124,7 +124,7 @@ export default function UserProductSingleView() {
             return;
         }
 
-        dispatch(createOrder(totalAmount * 100));
+        dispatch(createOrder(totalAmount));
     };
 
     useEffect(() => {

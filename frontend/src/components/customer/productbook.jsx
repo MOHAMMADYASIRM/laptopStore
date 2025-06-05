@@ -48,6 +48,8 @@ export default function ProductList() {
     }, [dispatch]);
 
     const { products = [], loading, error } = useSelector((state) => state.product || {});
+    console.log(products);
+
     const { allBrands = [] } = useSelector((state) => state.brand || {});
 
     const handleSearch = () => {
@@ -73,18 +75,25 @@ export default function ProductList() {
     };
 
     const filteredProducts = products
-        .filter(p =>
-            p.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            p.productGpu.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            p.productModel.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            p.productProcessor.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            String(p.productStorage).toLowerCase().includes(searchTerm.toLowerCase()) ||
-            String(p.productRam).toLowerCase().includes(searchTerm.toLowerCase()) ||
-            p.operatingSystem.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            String(p.refreshRate).toLowerCase().includes(searchTerm.toLowerCase()) &&
-            (selectedBrands.length === 0 || selectedBrands.includes(p.brandId)) &&
-            (selectedCategories.length === 0 || selectedCategories.includes(p.productCategory))
-        )
+        .filter(p => {
+            const matchesSearch =
+                p.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                p.productGpu.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                p.productModel.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                p.productProcessor.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                String(p.productStorage).toLowerCase().includes(searchTerm.toLowerCase()) ||
+                String(p.productRam).toLowerCase().includes(searchTerm.toLowerCase()) ||
+                p.operatingSystem.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                String(p.refreshRate).toLowerCase().includes(searchTerm.toLowerCase());
+
+            const matchesBrand =
+                selectedBrands.length === 0 || selectedBrands.includes(p.brandId);
+
+            const matchesCategory =
+                selectedCategories.length === 0 || selectedCategories.includes(p.productCategory);
+
+            return matchesSearch && matchesBrand && matchesCategory;
+        })
         .sort((a, b) => {
             switch (sortOption) {
                 case "low-to-high": return a.productPrice - b.productPrice;
@@ -94,6 +103,7 @@ export default function ProductList() {
                 default: return 0;
             }
         });
+
 
     const handleProductClick = (productId) => {
         nav(`/singleView/${productId}`);

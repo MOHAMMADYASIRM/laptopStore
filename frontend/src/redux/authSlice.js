@@ -480,7 +480,7 @@ export const createOrder = createAsyncThunk(
     async (amount, thunkAPI) => {
         try {
             const response = await axios.post(`${url}/api/payment/create-order`, {
-                amount: amount,
+                amount: amount * 100,
             });
             return response.data.order;
         } catch (error) {

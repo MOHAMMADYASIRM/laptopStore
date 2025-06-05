@@ -129,7 +129,7 @@ export default function UserCart() {
 
             const options = {
                 key: RAZORPAY_KEY,
-                amount: order.amount,
+                amount: order.amount * 100,
                 currency: order.currency,
                 order_id: order.id,
                 name: "NEOTEX",
