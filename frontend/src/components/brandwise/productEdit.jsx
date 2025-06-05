@@ -9,6 +9,7 @@ export default function BrandProductEdit() {
   const navigate = useNavigate();
 
   const { product, loading, error } = useSelector((state) => state.product || {});
+
   const [formData, setFormData] = useState({
     productCategory: "",
     productName: "",
@@ -279,7 +280,7 @@ export default function BrandProductEdit() {
                 value={formData.operatingSystem}
                 onChange={handleChange}
                 className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500" required
-                
+
               >
                 <option value="">Select OS</option>
                 {["Windows 10", "Windows 11", "Ubuntu", "macOS", "Other"].map(os => (

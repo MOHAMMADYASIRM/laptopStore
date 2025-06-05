@@ -63,7 +63,7 @@ export default function BrandProducts() {
                   <img
                     src={product.productImage}
                     alt={product.productName}
-                    className="w-64 h-64 object-cover"
+                    className="w-64 h-64 object-center"
                   />
                 </div>
 

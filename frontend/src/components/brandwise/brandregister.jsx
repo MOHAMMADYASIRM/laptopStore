@@ -13,7 +13,7 @@ export default function BrandRegister() {
     const [brand, setBrandName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState();
 
     const [hasMinLength, setHasMinLength] = useState(false);
     const [hasUpper, setHasUpper] = useState(false);
